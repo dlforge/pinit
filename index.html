@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PinIt — 全局窗口置顶工具</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --text: #2d3436;
+    --muted: #636e72;
+    --accent: #db3748;
+    --accent-hover: #c5303e;
+    --border: #e9ecef;
+    --code-bg: #f1f3f5;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #f85149;
+      --accent-hover: #da3633;
+      --border: #30363d;
+      --code-bg: #161b22;
+      --shadow: 0 1px 3px rgba(0,0,0,.3);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 80px 24px 48px;
+    background: linear-gradient(135deg, #1a0a0e 0%, #0d1117 50%, #0a0d14 100%);
+    color: #e6edf3;
+  }
+  .hero .icon {
+    display: inline-block;
+    width: 72px; height: 72px;
+    background: var(--accent);
+    border-radius: 18px;
+    margin-bottom: 24px;
+    line-height: 72px;
+    font-size: 36px;
+    box-shadow: 0 8px 32px rgba(219,55,72,.35);
+  }
+  .hero h1 { font-size: 42px; font-weight: 800; letter-spacing: -.5px; }
+  .hero .tagline {
+    margin-top: 12px;
+    font-size: 18px;
+    color: #8b949e;
+    max-width: 480px;
+    margin-inline: auto;
+  }
+  .hero .cta {
+    margin-top: 32px;
+    display: flex; gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  .btn-ghost {
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,.06); }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  section { padding: 56px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  h2 { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+  h3 { font-size: 17px; font-weight: 600; margin: 20px 0 8px; }
+
+  p, li { color: var(--muted); }
+  ul { padding-left: 20px; }
+  li { margin-bottom: 6px; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+    box-shadow: var(--shadow);
+  }
+  .card + .card { margin-top: 16px; }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .feature {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .feature .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .feature h4 { font-size: 15px; margin-bottom: 6px; }
+
+  kbd {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 13px;
+    font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 1px 0 var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  th { font-weight: 600; color: var(--text); }
+  td { color: var(--muted); }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    font-size: 13px;
+    font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+    line-height: 1.6;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="icon">📌</div>
+  <h1>PinIt</h1>
+  <p class="tagline">鼠标悬停 + 一键快捷键，任意窗口瞬间置顶。<br>轻量、无打扰、开机即用。</p>
+  <div class="cta">
+    <a class="btn btn-primary" href="https://github.com/dlforge/pinit/releases">⬇ 下载最新版</a>
+    <a class="btn btn-ghost" href="#usage">查看使用说明</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- 功能 -->
+<section>
+  <h2>功能特性</h2>
+  <div class="feature-grid">
+    <div class="feature">
+      <h4><span class="dot"></span>一键置顶</h4>
+      <p>鼠标悬停 + 快捷键，窗口瞬间置顶或取消</p>
+    </div>
+    <div class="feature">
+      <h4><span class="dot"></span>系统托盘</h4>
+      <p>启动后最小化到托盘，不占任务栏空间</p>
+    </div>
+    <div class="feature">
+      <h4><span class="dot"></span>自定义快捷键</h4>
+      <p>Ctrl / Shift / Alt / Win 任意组合</p>
+    </div>
+    <div class="feature">
+      <h4><span class="dot"></span>开机启动</h4>
+      <p>设置后随系统自动启动，无需手动打开</p>
+    </div>
+    <div class="feature">
+      <h4><span class="dot"></span>轻量无依赖</h4>
+      <p>纯 Rust 编写，单个 exe 文件，无需安装</p>
+    </div>
+    <div class="feature">
+      <h4><span class="dot"></span>免管理员</h4>
+      <p>普通用户权限即可运行，安全放心</p>
+    </div>
+  </div>
+</section>
+
+<!-- 使用说明 -->
+<section id="usage">
+  <h2>使用说明</h2>
+  <div class="card">
+    <table>
+      <tr><th>操作</th><th>方式</th></tr>
+      <tr><td>置顶 / 取消置顶</td><td>鼠标悬停在窗口上，按 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>（默认）</td></tr>
+      <tr><td>左键快速切换</td><td>左键点击托盘图标</td></tr>
+      <tr><td>修改快捷键</td><td>右键托盘图标 → 修改快捷键 → 按下新组合键</td></tr>
+      <tr><td>开机启动</td><td>右键托盘图标 → 开机启动（勾选即生效）</td></tr>
+      <tr><td>退出程序</td><td>右键托盘图标 → 退出</td></tr>
+    </table>
+  </div>
+
+  <h3>命令行参数</h3>
+  <pre>PinIt.exe                      使用保存的快捷键（默认 Ctrl+Shift+T）
+PinIt.exe --mod ctrl+alt       指定修饰键
+PinIt.exe --key F12            指定按键
+PinIt.exe --mod ctrl --key Z   同时指定修饰键和按键
+PinIt.exe --help               显示帮助</pre>
+</section>
+
+<!-- 下载 -->
+<section>
+  <h2>下载安装</h2>
+  <div class="card">
+    <p>前往 <a href="https://github.com/dlforge/pinit/releases" style="color:var(--accent)">GitHub Releases</a> 下载最新版本。</p>
+    <p style="margin-top:8px">解压后将 <code>PinIt.exe</code> 放到任意目录运行即可，<strong>无需安装</strong>。</p>
+  </div>
+</section>
+
+<!-- 系统要求 -->
+<section>
+  <h2>系统要求</h2>
+  <div class="card">
+    <ul>
+      <li>Windows 10 / 11（x64）</li>
+      <li>无需管理员权限</li>
+      <li>无需额外运行库</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+
+<div class="footer">
+  PinIt &copy; 2026 dlforge &middot; 专有软件，保留所有权利
+</div>
+
+</body>
+</html>
