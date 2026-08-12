@@ -19,16 +19,6 @@
 | 开机启动 | 右键托盘图标 → 开机启动（勾选即生效） |
 | 退出程序 | 右键托盘图标 → 退出 |
 
-### 命令行参数
-
-```
-PinIt.exe                      使用保存的快捷键（默认 Ctrl+Shift+T）
-PinIt.exe --mod ctrl+alt       指定修饰键
-PinIt.exe --key F12            指定按键
-PinIt.exe --mod ctrl --key Z   同时指定修饰键和按键
-PinIt.exe --help               显示帮助
-```
-
 ## 下载
 
 前往 [Releases](https://github.com/dlforge/pinit/releases) 页面下载最新版本。
