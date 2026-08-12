@@ -23,7 +23,7 @@
 
 前往 [Releases](https://github.com/dlforge/pinit/releases) 页面下载最新版本。
 
-解压后运行 `PinIt.exe` 即可，无需安装。
+解压后运行安装程序即可。
 
 ## 系统要求
 
